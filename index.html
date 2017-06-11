@@ -40,6 +40,7 @@
         let lastX = 0;
         let lastY = 0;
         let isPenMode = true;
+        let lastTouchEvent = '';
 
         function draw(e){
             if(!isDrawing || !isPenMode) return;
@@ -74,7 +75,6 @@
             ctx.moveTo(0, canvas.height * (yPosPercent/100));
             ctx.lineTo(canvas.width, canvas.height * (yPosPercent/100));
             ctx.stroke();
-
         }
 
         function resetPen(){
@@ -118,16 +118,23 @@
             let types = {
                 'touchstart' : 'mousedown',
                 'touchend' : 'mouseup',
-                'touchmove' : 'mousemove'
+                'touchmove' : 'mousemove',
+                'tap' : 'click'
             };
 
-            let event = new MouseEvent( types[e.type], {
-                clientX : e.touches[0] ? e.touches[0].clientX : 0,
-                clientY : e.touches[0] ? e.touches[0].clientY : 0
+            let type = (!isPenMode && e.type === 'touchend' && lastTouchEvent === 'touchstart') ? 'tap' : e.type;
+            let coordX = (type === 'tap' && e.changedTouches[0]) ? e.changedTouches[0].clientX : e.touches[0] ? e.touches[0].clientX : 0;
+            let coordY = (type === 'tap' && e.changedTouches[0]) ? e.changedTouches[0].clientY : e.touches[0] ? e.touches[0].clientY : 0;
+            let event = new MouseEvent( types[type], {
+                clientX : coordX,
+                clientY : coordY
             });
+
+            console.log( !isPenMode, e.type, lastTouchEvent, type);
 
             e.preventDefault();
             canvas.dispatchEvent( event );
+            lastTouchEvent = e.type;
         }
 
         canvas.addEventListener( 'mousemove', draw);
