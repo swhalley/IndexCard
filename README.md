@@ -13,3 +13,6 @@ https://swhalley.github.io/IndexCard/
 # Usage
 Pen Mode - click and draw around 
 Text Mode - Write some text in the box, and click on the screen
+
+# Code Quality and Standards
+This is a hack. Follow what I say, not what I do. 
